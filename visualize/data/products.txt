@@ -1,0 +1,16 @@
+ProductID,ProductName,Category,Price,Stock,Rating
+101,Laptop Pro,Electronics,1299.99,45,4.5
+102,Wireless Mouse,Electronics,29.99,150,4.2
+103,Office Chair,Furniture,249.99,30,4.7
+104,Desk Lamp,Furniture,39.99,80,4.3
+105,USB-C Cable,Electronics,15.99,200,4.1
+106,Notebook Set,Stationery,12.99,120,4.4
+107,Standing Desk,Furniture,599.99,15,4.8
+108,Webcam HD,Electronics,89.99,60,4.6
+109,Pen Pack,Stationery,8.99,180,4.0
+110,Monitor 27inch,Electronics,399.99,25,4.7
+111,Keyboard Mechanical,Electronics,129.99,55,4.5
+112,Bookshelf,Furniture,179.99,20,4.4
+113,Printer Wireless,Electronics,249.99,35,4.3
+114,Paper Ream,Stationery,24.99,90,4.2
+115,Desk Organizer,Stationery,19.99,100,4.1
