@@ -9,6 +9,20 @@ import pandas as pd
 from file import File, FileHandler
 from InquirerPy import inquirer
 
+try:
+    matplotlib.use("TkAgg")  # Try TkAgg first (most common)
+except ImportError:
+    try:
+        matplotlib.use("Qt5Agg")  # Try Qt5Agg
+    except ImportError:
+        try:
+            matplotlib.use("GTK3Agg")  # Try GTK3Agg
+        except ImportError:
+            print("⚠️  Warning: No GUI backend found. Using default backend.")
+            print("   Install one of: python3-tk, PyQt5, or PyGObject")
+            matplotlib.use("Agg")
+            sys.exit()
+
 
 class VisualizationType(Enum):
     """Available visualization types"""
