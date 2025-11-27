@@ -1,30 +1,105 @@
 # Visualize
 
-Bu proje, CSV dosyalarından grafik üretmek için hazırlanmış basit bir
-komut satırı aracıdır. `engine.py` ve `visualize.py` dosyaları temel
-akışı yönetir.
+Visualize, çeşitli veri dosyalarından interaktif grafik oluşturmanıza olanak sağlayan güçlü bir Python komut satırı aracıdır.
 
-## Kurulum
+## 📊 Özellikler
+
+- **Çoklu Format Desteği**: CSV, Excel (XLSX/XLS), JSON ve TXT dosyaları
+- **İnteraktif Görselleştirme**: Çizgi, çubuk grafikleri, histogram ve tablo görüntüleme
+- **Çoklu Dosya İşleme**: Birden fazla dosyayı aynı anda işleme ve karşılaştırma
+- **Kullanıcı Dostu CLI**: InquirerPy tabanlı modern komut satırı arayüzü
+- **Esnek Çıktı**: Ekranda gösterme veya yüksek çözünürlüklü PNG kaydetme
+
+## 📖 Dokümantasyon
+
+Detaylı kullanım kılavuzu, API referansı ve örnekler için dokümantasyonu ziyaret edin:
+
+**🔗 [Tam Dokümantasyon](https://riqoto.github.io/visualize/)**
+
+
+## 🚀 Hızlı Başlangıç
+
+### Kurulum
 
 1.  Sanal ortam oluşturun:
 
-    ``` bash
+    ```bash
     python3 -m venv .venv
     source .venv/bin/activate
     ```
 
 2.  Bağımlılıkları yükleyin:
 
-    ``` bash
+    ```bash
     pip install -r requirments.txt
     ```
 
-3.  Eğer grafiklerin ekranda açılmasını istiyorsanız sisteminizde bir
-    Matplotlib backend'i bulunmalıdır (Tk, Qt veya GTK). Backend
-    bulunamazsa görseller dosya olarak kaydedilir.
+3.  **Opsiyonel** - GUI backend (grafikleri ekranda görüntülemek için):
 
-## Notlar
+    **Linux (Debian/Ubuntu):**
+    ```bash
+    sudo apt install python3-tk
+    ```
 
--   CSV içeriğine göre kolon seçimi ve grafik türü komut satırı
-    üzerinden sorulacaktır.
--   Kod Python 3.10+ gerektirir.
+    **Linux (Fedora/RHEL):**
+    ```bash
+    sudo dnf install python3-tkinter
+    ```
+
+    **Linux (Arch):**
+    ```bash
+    sudo pacman -S tk
+    ```
+
+    **macOS:**
+    ```bash
+    brew install python-tk
+    ```
+
+    **Windows:**
+    Tk genellikle Python ile birlikte gelir. Eğer sorun yaşarsanız Python'u yeniden kurun.
+
+    **Alternatif (Tüm Platformlar):**
+    ```bash
+    pip install PyQt5
+    ```
+
+### Kullanım
+
+```bash
+python -m visualize.main
+```
+
+Program size interaktif olarak:
+- Dosya seçimi
+- Görselleştirme modu (tek, çoklu, karşılaştırma)
+- Grafik türü
+- Eksen ve kolon seçimi
+
+seçeneklerini sunacaktır.
+
+## 📁 Desteklenen Dosya Formatları
+
+- **CSV** (`.csv`) - Virgülle ayrılmış değerler
+- **Excel** (`.xlsx`, `.xls`) - Microsoft Excel dosyaları
+- **JSON** (`.json`) - JavaScript Object Notation
+- **TXT** (`.txt`) - Metin dosyaları (otomatik delimiter tespiti)
+
+## 🎨 Görselleştirme Tipleri
+
+- **Line Chart** - Zaman serisi ve trend analizi
+- **Bar Chart** - Kategorik veri karşılaştırmaları
+- **Histogram** - Dağılım analizi
+- **Table** - Veri tablo görüntüleme
+
+## 📚 Gereksinimler
+
+- Python 3.10+
+- Matplotlib
+- Pandas
+- InquirerPy
+
+## 🔗 Linkler
+
+- [Dokümantasyon](https://KULLANICI_ADI.github.io/visualize/)
+- [GitHub Repository](https://github.com/riqoto/visual)

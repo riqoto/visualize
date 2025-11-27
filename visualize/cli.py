@@ -15,6 +15,7 @@ class CLIConfig:
     "CLI Config interface"
 
     "default path for data is /data folder on current path"
+    "TODO: get current path with getcwd()"
     path: str = "./data"
     "if given path has own other folders(childs) program needs to walk on them but right now its not possible"
     "TODO: create a Tree for walking on a path safely"
@@ -31,6 +32,10 @@ class CLIError(Enum):
     DataNotFound = "data not found"
     PathDoesntExist = "path does not exist"
     FolderIsEmpty = "folder does not include any file"
+    FileIsNotValid = "file is not valid"
+    FolderDoesntHaveValidFileTypes = (
+        "Folder do not include valid file types for visualize"
+    )
 
 
 class CLI(CLIConfig):
@@ -109,6 +114,9 @@ class CLI(CLIConfig):
         print(f"📁 Scanning directory: {self.config.path}")
         print(f"Actions:\n{actions:^50}")
 
+    """TODO: all logic works here seperate the logic
+    """
+
     def visualize_files(self, file_names: list[str]):
         """Handle visualization for selected files"""
         # Convert file names to full paths
@@ -125,12 +133,14 @@ class CLI(CLIConfig):
                 if file.validate_suffix():
                     valid_files.append(file_path)
                 else:
-                    print(f"⚠️  Skipping {Path(file_path).name}: Unsupported file type")
+                    print(
+                        f"⚠️  Skipping {Path(file_path).name}: {CLIError.FileIsNotValid}"
+                    )
             except Exception as e:
                 print(f"⚠️  Skipping {Path(file_path).name}: {str(e)}")
 
         if not valid_files:
-            print("\n❌ No valid files to visualize")
+            sys.exit(f"{CLIError.FolderDoesntHaveValidFileTypes.value}")
             return
 
         print(f"\n✅ {len(valid_files)} valid file(s) ready for visualization")
@@ -143,7 +153,6 @@ class CLI(CLIConfig):
         """Run the CLI application"""
         self.intro()
 
-        # Scan directory and let user select files
         selected_files = self.create_files_prompt()
 
         if selected_files:

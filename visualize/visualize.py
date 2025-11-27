@@ -427,10 +427,6 @@ class VisualizationWorkflow:
         print("\n✅ Workflow completed!")
 
     def run_with_shared_config(self, file_paths: list[str]):
-        """
-        AKILLI WORKFLOW: Birden fazla dosya için aynı tip grafiği oluştur
-        Kullanıcıya her dosya için ayrı ayrı sormak yerine, bir kere sor ve tümüne uygula
-        """
         print("\n" + "=" * 50)
         print(f"🎨 SMART VISUALIZATION WORKFLOW - {len(file_paths)} FILES")
         print("=" * 50)
@@ -526,7 +522,6 @@ class VisualizationWorkflow:
                 continue
 
     def _run_comparison(self, file_paths: list[str]):
-        """Dosyaları karşılaştırmalı görselleştir"""
         print("\n📊 Comparison mode: All files in one visualization")
 
         from InquirerPy import inquirer
