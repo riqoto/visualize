@@ -1,3 +1,22 @@
+# Sphinx Dokümantasyon Gereksinimleri
+
+# Temel Sphinx paketi
 sphinx>=7.0.0
-sphinx-rtd-theme>=2.0.0
-sphinx-autobuild>=2021.3.14
+
+# Google/NumPy style docstrings desteği
+sphinx-napoleon
+
+# alabaster teması (Flask-style, sol menülü)
+alabaster>=0.7.13
+
+# Otomatik API dokümantasyonu için kod görüntüleme
+sphinx-autobuild
+
+# Markdown desteği (opsiyonel, eğer .md dosyaları kullanmak isterseniz)
+myst-parser
+
+# Projenin kendi bağımlılıkları (dokümantasyon oluştururken import edilebilmesi için)
+matplotlib>=3.7.0
+pandas>=2.0.0
+inquirerpy>=0.3.4
+openpyxl>=3.1.0
