@@ -100,6 +100,10 @@ seçeneklerini sunacaktır.
 - **Histogram** - Dağılım analizi
 - **Table** - Veri tablo görüntüleme
 
+## 🏗️ Mimari
+
+![Mimari Genel Bakış](docs/Workflow.png)
+
 ## 📚 Gereksinimler
 
 - Python 3.10+

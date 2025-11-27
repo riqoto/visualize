@@ -291,17 +291,15 @@ class CLI(CLIConfig):
         Todo:
             Tüm mantık burada, daha modüler hale getirilmeli.
         """
-        # Convert file names to full paths
         full_paths = [
             os.path.join(self.config.path, file_name) for file_name in file_names
         ]
 
-        # Validate all files
         valid_files = []
         for file_path in full_paths:
             try:
                 file = File(file_path)
-                file.__post_init__()  # Validate file
+                file.__post_init__()  
                 if file.validate_suffix():
                     valid_files.append(file_path)
                 else:
@@ -317,7 +315,6 @@ class CLI(CLIConfig):
 
         print(f"\n✅ {len(valid_files)} valid file(s) ready for visualization")
 
-        # Start visualization workflow
         workflow = VisualizationWorkflow()
         workflow.run_with_shared_config(valid_files)
 

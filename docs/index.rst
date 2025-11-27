@@ -345,6 +345,10 @@ Görselleştirme stratejileri ve grafik oluşturma modülü. Matplotlib kullanar
 Mimari Genel Bakış
 ------------------
 
+.. image:: Workflow.png
+   :alt: Mimari Genel Bakış
+   :align: center
+
 .. code-block:: text
 
    ┌─────────────┐
