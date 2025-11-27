@@ -3,8 +3,6 @@
 # Temel Sphinx paketi
 sphinx>=7.0.0
 
-# Google/NumPy style docstrings desteği
-sphinx-napoleon
 
 # alabaster teması (Flask-style, sol menülü)
 alabaster>=0.7.13
