@@ -1,3 +1,28 @@
+"""Görselleştirme motoru ve stratejileri modülü.
+
+Bu modül, verilerin görselleştirilmesi için gerekli olan tüm mantığı,
+stratejileri ve workflow yönetimini içerir. Strategy pattern kullanılarak
+farklı grafik türleri (Line, Bar, Histogram, Table) implement edilmiştir.
+
+Classes:
+    VisualizationType: Desteklenen grafik türleri enum'u.
+    VisualizationStrategy: Grafik stratejileri için abstract base class.
+    LineChartStrategy: Çizgi grafiği oluşturma stratejisi.
+    BarChartStrategy: Çubuk grafiği oluşturma stratejisi.
+    HistogramStrategy: Histogram oluşturma stratejisi.
+    TableStrategy: Tablo görünümü oluşturma stratejisi.
+    VisualizationHandler: Görselleştirme işlemlerini yöneten handler.
+    VisualizationWorkflow: Tüm görselleştirme akışını yöneten orchestrator.
+
+Example:
+    Temel kullanım::
+
+        from visualize import VisualizationWorkflow
+        
+        workflow = VisualizationWorkflow()
+        workflow.run("data.csv")
+"""
+
 import sys
 from abc import ABC, abstractmethod
 from enum import Enum
@@ -9,6 +34,7 @@ import pandas as pd
 from file import File, FileHandler
 from InquirerPy import inquirer
 
+# GUI Backend ayarları
 try:
     matplotlib.use("TkAgg")  # Try TkAgg first (most common)
 except ImportError:
@@ -25,7 +51,14 @@ except ImportError:
 
 
 class VisualizationType(Enum):
-    """Available visualization types"""
+    """Desteklenen görselleştirme türleri.
+    
+    Attributes:
+        LINE_CHART (str): Çizgi grafiği.
+        BAR_CHART (str): Çubuk grafiği.
+        HISTOGRAM (str): Histogram.
+        TABLE (str): Veri tablosu.
+    """
 
     LINE_CHART = "Line Chart"
     BAR_CHART = "Bar Chart"
@@ -34,16 +67,44 @@ class VisualizationType(Enum):
 
 
 class VisualizationStrategy(ABC):
-    """Abstract base class for visualization strategies"""
+    """Görselleştirme stratejileri için soyut temel sınıf (Abstract Base Class).
+    
+    Tüm grafik stratejileri bu sınıftan türetilmeli ve create_visualization
+    methodunu implement etmelidir.
+    """
 
     @abstractmethod
     def create_visualization(self, data: pd.DataFrame, config: dict):
-        """Create a specific type of visualization"""
+        """Spesifik bir grafik türü oluşturur.
+        
+        Args:
+            data (pd.DataFrame): Görselleştirilecek veri.
+            config (dict): Grafik konfigürasyonu (başlık, eksenler vb.).
+        
+        Raises:
+            NotImplementedError: Alt sınıflar bu methodu implement etmelidir.
+        """
         pass
 
 
 class LineChartStrategy(VisualizationStrategy):
+    """Çizgi grafiği (Line Chart) oluşturma stratejisi."""
+
     def create_visualization(self, data: pd.DataFrame, config: dict):
+        """Verilen veri ve konfigürasyon ile çizgi grafiği oluşturur.
+        
+        Args:
+            data (pd.DataFrame): Görselleştirilecek veri.
+            config (dict): Konfigürasyon sözlüğü.
+                - x_axis (str): X ekseni kolon adı.
+                - y_axis (str): Y ekseni kolon adı.
+                - title (str, optional): Grafik başlığı.
+        
+        Example:
+            >>> strategy = LineChartStrategy()
+            >>> config = {'x_axis': 'Date', 'y_axis': 'Sales', 'title': 'Sales Trend'}
+            >>> strategy.create_visualization(df, config)
+        """
         print("📈 Creating Line Chart...")
 
         x_col = config.get("x_axis")
@@ -80,7 +141,18 @@ class LineChartStrategy(VisualizationStrategy):
 
 
 class BarChartStrategy(VisualizationStrategy):
+    """Çubuk grafiği (Bar Chart) oluşturma stratejisi."""
+
     def create_visualization(self, data: pd.DataFrame, config: dict):
+        """Verilen veri ve konfigürasyon ile çubuk grafiği oluşturur.
+        
+        Args:
+            data (pd.DataFrame): Görselleştirilecek veri.
+            config (dict): Konfigürasyon sözlüğü.
+                - x_axis (str): Kategorik eksen (X).
+                - y_axis (str): Değer ekseni (Y).
+                - title (str, optional): Grafik başlığı.
+        """
         print("📊 Creating Bar Chart...")
 
         x_col = config.get("x_axis")
@@ -107,7 +179,18 @@ class BarChartStrategy(VisualizationStrategy):
 
 
 class HistogramStrategy(VisualizationStrategy):
+    """Histogram oluşturma stratejisi."""
+
     def create_visualization(self, data: pd.DataFrame, config: dict):
+        """Verilen veri ve konfigürasyon ile histogram oluşturur.
+        
+        Args:
+            data (pd.DataFrame): Görselleştirilecek veri.
+            config (dict): Konfigürasyon sözlüğü.
+                - column (str): Analiz edilecek kolon.
+                - bins (int, optional): Bin sayısı. Varsayılan 30.
+                - title (str, optional): Grafik başlığı.
+        """
         print("📊 Creating Histogram...")
 
         column = config.get("column")
@@ -136,7 +219,17 @@ class HistogramStrategy(VisualizationStrategy):
 
 
 class TableStrategy(VisualizationStrategy):
+    """Tablo görünümü oluşturma stratejisi."""
+
     def create_visualization(self, data: pd.DataFrame, config: dict):
+        """Veriyi matplotlib tablosu olarak görselleştirir.
+        
+        Args:
+            data (pd.DataFrame): Görselleştirilecek veri.
+            config (dict): Konfigürasyon sözlüğü.
+                - rows (int, optional): Gösterilecek satır sayısı. Varsayılan 10.
+                - title (str, optional): Tablo başlığı.
+        """
         print("📋 Creating Table...")
 
         title = config.get("title", "Data Table")
@@ -180,9 +273,24 @@ class TableStrategy(VisualizationStrategy):
 
 
 class VisualizationHandler:
-    """Manages visualization creation and configuration"""
+    """Görselleştirme işlemlerini yöneten handler sınıfı.
+    
+    Strateji seçimi, konfigürasyon yönetimi ve kullanıcı etkileşimi
+    (prompt'lar) bu sınıf üzerinden yürütülür.
+    
+    Attributes:
+        file_handler (FileHandler): Veri kaynağı handler'ı.
+        strategy (VisualizationStrategy | None): Seçili görselleştirme stratejisi.
+        config (dict): Görselleştirme konfigürasyonu.
+        strategies (dict): Mevcut stratejilerin haritası.
+    """
 
     def __init__(self, file_handler: FileHandler):
+        """VisualizationHandler'ı başlatır.
+        
+        Args:
+            file_handler (FileHandler): Veri kaynağı.
+        """
         self.file_handler = file_handler
         self.strategy: VisualizationStrategy | None = None
         self.config: dict = {}
@@ -194,18 +302,33 @@ class VisualizationHandler:
         }
 
     def set_strategy(self, viz_type: VisualizationType):
-        """Set visualization strategy based on type"""
+        """Görselleştirme tipine göre stratejiyi ayarlar.
+        
+        Args:
+            viz_type (VisualizationType): İstenen grafik türü.
+        """
         self.strategy = self.strategies.get(viz_type)
         if self.strategy is None:
             print(f"⚠️  Visualization type {viz_type.value} not implemented yet")
 
     def configure(self, **kwargs):
-        """Configure visualization parameters"""
+        """Görselleştirme parametrelerini günceller.
+        
+        Args:
+            **kwargs: Konfigürasyon parametreleri (x_axis, title vb.).
+        """
         self.config.update(kwargs)
         print(f"⚙️  Configuration updated: {self.config}")
 
     def create_visualization(self):
-        """Create visualization using current strategy"""
+        """Mevcut strateji ve konfigürasyon ile görselleştirmeyi oluşturur.
+        
+        Veriyi FileHandler'dan alır ve stratejinin create_visualization
+        methodunu çağırır.
+        
+        Note:
+            Strateji veya veri yoksa hata mesajı yazdırır.
+        """
         if self.strategy is None:
             print("❌ No visualization strategy set")
             return
@@ -221,6 +344,11 @@ class VisualizationHandler:
             print(f"❌ Error creating visualization: {str(e)}")
 
     def prompt_visualization_type(self) -> VisualizationType | None:
+        """Kullanıcıdan görselleştirme türünü seçmesini ister.
+        
+        Returns:
+            VisualizationType | None: Seçilen tür veya iptal durumunda None.
+        """
         try:
             viz_types = list(VisualizationType)
             choices = [viz_type.value for viz_type in viz_types]
@@ -252,6 +380,16 @@ class VisualizationHandler:
             return None
 
     def prompt_configuration(self, viz_type: VisualizationType) -> dict:
+        """Seçilen grafik türüne göre kullanıcıdan konfigürasyon alır.
+        
+        Grafik türüne göre farklı sorular sorar (X ekseni, Y ekseni, başlık vb.).
+        
+        Args:
+            viz_type (VisualizationType): Seçilen grafik türü.
+        
+        Returns:
+            dict: Oluşturulan konfigürasyon sözlüğü.
+        """
         columns = self.file_handler.get_column_names()
 
         try:
@@ -299,12 +437,14 @@ class VisualizationHandler:
                     validate=lambda x: x.isdigit() and int(x) > 0,
                     invalid_message="Please enter a positive number",
                     qmark="🔢",
+                    keybindings={"interrupt": [{"key": "q"}]},
                 ).execute()
 
                 title = inquirer.text(
                     message="Table title:",
                     default="Data Table",
                     qmark="📝",
+                    keybindings={"interrupt": [{"key": "q"}]},
                 ).execute()
 
                 config = {"rows": int(rows), "title": title}
@@ -337,6 +477,7 @@ class VisualizationHandler:
                     message="Chart title:",
                     default=viz_type.value,
                     qmark="📝",
+                    keybindings={"interrupt": [{"key": "q"}]},
                 ).execute()
 
                 config = {"x_axis": x_col, "y_axis": y_col, "title": title}
@@ -349,7 +490,13 @@ class VisualizationHandler:
             return {}
 
     def interactive_visualization(self):
-        """Full interactive visualization flow"""
+        """Tam interaktif görselleştirme akışını başlatır.
+        
+        1. Veri önizlemesi gösterir.
+        2. Döngü içinde kullanıcıdan grafik türü ve konfigürasyon alır.
+        3. Grafiği oluşturur.
+        4. Başka grafik isteyip istemediğini sorar.
+        """
         self.file_handler.preview_data()
 
         while True:
@@ -382,15 +529,32 @@ class VisualizationHandler:
 
 
 class VisualizationWorkflow:
-    """Orchestrates the entire visualization workflow"""
+    """Tüm görselleştirme iş akışını yöneten orchestrator sınıfı.
+    
+    Dosya hazırlığı, handler kurulumu ve farklı çalışma modlarını (tek dosya,
+    çoklu dosya, karşılaştırma) yönetir.
+    
+    Attributes:
+        file (File | None): Aktif dosya nesnesi.
+        file_handler (FileHandler | None): Aktif dosya handler'ı.
+        viz_handler (VisualizationHandler | None): Aktif görselleştirme handler'ı.
+    """
 
     def __init__(self):
+        """VisualizationWorkflow sınıfını başlatır."""
         self.file: File | None = None
         self.file_handler: FileHandler | None = None
         self.viz_handler: VisualizationHandler | None = None
 
     def setup_file(self, file_path: str):
-        """Setup file and file handler"""
+        """Dosyayı ve file handler'ı hazırlar.
+        
+        Args:
+            file_path (str): Dosya yolu.
+        
+        Raises:
+            SystemExit: Dosya tipi desteklenmiyorsa.
+        """
         self.file = File(file_path)
         self.file.__post_init__()  # Call validation
 
@@ -407,7 +571,7 @@ class VisualizationWorkflow:
         self.file_handler.read_file()
 
     def setup_visualization(self):
-        """Setup visualization handler"""
+        """Visualization handler'ı kurar ve interaktif akışı başlatır."""
         if self.file_handler is None:
             print("❌ File handler not initialized")
             return
@@ -416,7 +580,11 @@ class VisualizationWorkflow:
         self.viz_handler.interactive_visualization()
 
     def run(self, file_path: str):
-        """Complete workflow for single file"""
+        """Tek bir dosya için workflow'u çalıştırır.
+        
+        Args:
+            file_path (str): Dosya yolu.
+        """
         print("\n" + "=" * 50)
         print("🎨 VISUALIZATION WORKFLOW")
         print("=" * 50)
@@ -427,6 +595,16 @@ class VisualizationWorkflow:
         print("\n✅ Workflow completed!")
 
     def run_with_shared_config(self, file_paths: list[str]):
+        """Birden fazla dosya için akıllı workflow'u çalıştırır.
+        
+        Kullanıcıya çalışma modu seçtirir:
+        1. Tüm dosyalar için aynı görselleştirme
+        2. Her dosya için farklı görselleştirme
+        3. Dosyaları karşılaştırma
+        
+        Args:
+            file_paths (list[str]): Dosya yolları listesi.
+        """
         print("\n" + "=" * 50)
         print(f"🎨 SMART VISUALIZATION WORKFLOW - {len(file_paths)} FILES")
         print("=" * 50)
@@ -455,7 +633,14 @@ class VisualizationWorkflow:
         print("\n✅ All files processed!")
 
     def _run_same_visualization_for_all(self, file_paths: list[str]):
-        """Tüm dosyalar için aynı tipi görselleştir"""
+        """Tüm dosyalar için aynı görselleştirme tipini uygular.
+        
+        Önce tüm dosyaları yükler, sonra kullanıcıdan bir kez konfigürasyon alır
+        ve bu konfigürasyonu tüm dosyalara uygular.
+        
+        Args:
+            file_paths (list[str]): Dosya yolları listesi.
+        """
         print("\n📋 Loading all files...")
 
         file_handlers = []
@@ -504,6 +689,11 @@ class VisualizationWorkflow:
             temp_viz_handler.create_visualization()
 
     def _run_different_visualization_for_each(self, file_paths: list[str]):
+        """Her dosya için ayrı ayrı görselleştirme akışı çalıştırır.
+        
+        Args:
+            file_paths (list[str]): Dosya yolları listesi.
+        """
         print("\n📋 Each file will have its own visualization configuration\n")
 
         for i, file_path in enumerate(file_paths, 1):
@@ -522,6 +712,13 @@ class VisualizationWorkflow:
                 continue
 
     def _run_comparison(self, file_paths: list[str]):
+        """Dosyaları yan yana karşılaştırmalı olarak görselleştirir.
+        
+        Ortak kolonları bulur ve seçilen kolon üzerinden karşılaştırma grafiği çizer.
+        
+        Args:
+            file_paths (list[str]): Dosya yolları listesi.
+        """
         print("\n📊 Comparison mode: All files in one visualization")
 
         from InquirerPy import inquirer
@@ -562,18 +759,21 @@ class VisualizationWorkflow:
             message="Select comparison chart type:",
             choices=choices,
             qmark="🎨",
+            keybindings={"interrupt": [{"key": "q"}]},
         ).execute()
 
         x_col = inquirer.select(
             message="X-axis:",
             choices=common_columns,
             qmark="📈",
+            keybindings={"interrupt": [{"key": "q"}]},
         ).execute()
 
         y_col = inquirer.select(
             message="Y-axis to compare:",
             choices=common_columns,
             qmark="📊",
+            keybindings={"interrupt": [{"key": "q"}]},
         ).execute()
 
         print(f"\n🚀 Creating comparison {selected}...")

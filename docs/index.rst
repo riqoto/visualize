@@ -497,7 +497,7 @@ Bu proje MIT lisansı altında yayınlanmıştır.
 İletişim
 --------
 
-* **Geliştirici**: Riqoto
+* **Geliştirici**: riqoto
 * **GitHub**: `@riqoto <https://github.com/riqoto>`_
 * **Proje**: `Visualize <https://github.com/riqoto/visual>`_
 
@@ -513,4 +513,4 @@ Bu proje MIT lisansı altında yayınlanmıştır.
 ----
 
 .. note::
-   **Son Güncelleme:** 2024 | **Versiyon:** 1.0.0 | Made with ❤️ by Riqoto
+   **Son Güncelleme:** 2025 | **Versiyon:** 1.0.0 | riqoto

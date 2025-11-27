@@ -21,11 +21,27 @@ Attributes:
     cli (CLI): Ana CLI uygulama nesnesi.
 """
 
-from cli import CLI, CLIConfig
+import sys
+import os
+
+# Modül import sorunlarını çözmek için path ayarı
+# Hem 'python -m visualize.main' hem de 'python visualize/main.py' çalışmasını sağlar
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.insert(0, current_dir)
+
+try:
+    from cli import CLI, CLIConfig
+except ImportError:
+    # Fallback for module execution
+    from visualize.cli import CLI, CLIConfig
 
 if "__main__" == __name__:
     # Varsayılan veri klasörü ile CLI yapılandırması oluştur
-    cli_config: CLIConfig = CLIConfig(path="/home/bhh/Belgeler/visiual/visualize/data")
+    # Veri klasörü visualize/data altında varsayılıyor
+    data_path = os.path.join(current_dir, "data")
+    
+    cli_config: CLIConfig = CLIConfig(path=data_path)
     
     # CLI uygulamasını başlat
     cli: CLI = CLI(cli_config)
